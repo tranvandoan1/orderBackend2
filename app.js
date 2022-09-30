@@ -15,8 +15,8 @@ mongoose
   .catch((error) => console.log("DB not connected ", error));
 
 // middleware
-app.use(morgan("tiny"));
-app.use(express.json({ limit: "50mb" }));
+app.use(morgan("dev"));
+app.use(express.json({ limit: "10mb" }));
 app.use(cors());
 // Route
 readdirSync("./src/routes").map((route) =>
@@ -24,36 +24,6 @@ readdirSync("./src/routes").map((route) =>
 );
 
 app.use(express.json());
-const swaggerDocument = YAML.load("./src/docs/swagger_datn.yaml");
-
-app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
-
-app.use("*", (req, res) => {
-  res.redirect("/api-docs");
-});
-
-let i = 0;
-let y = 2021;
-let time = 0;
-setInterval(() => {
-  time += 1;
-  if (time === 365) {
-    i++;
-    y++;
-    semester({
-      name: `Spring ${y}`,
-    }).save();
-    i++;
-    semester({
-      name: `Summer ${y}`,
-    }).save();
-    i++;
-    semester({
-      name: `Fall ${y}`,
-    }).save();
-    time = 0;
-  }
-}, 86400000);
 
 const port = process.env.PORT || 8000;
 
